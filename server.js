@@ -65,7 +65,11 @@ http.createServer(function(request, response) {
 		if(!type) {
 			type = "text/plain";
 		}
-		response.writeHead(code, {"Content-Type": type});
+		if(headers == undefined) {
+			var headers = {};
+		}
+		headers["Content-Type"] = type;
+		response.writeHead(code, headers);
 		if(body && body.pipe) {
 			body.pipe(response);
 		}

@@ -41,11 +41,14 @@ fs.getList = function(callback) {
 var view = {};
 
 view.fileList = document.getElementById("file-list");
+view.fileView = document.getElementById("file-view");
 
 view.listFiles = function() {
 	clear(view.fileList);
 	for(var i in fs.list) {
-		view.fileList.appendChild(elt("p", {class: "file-list-item", onclick: "view.goto('" + fs.list[i] + "')"}, fs.list[i]));
+		if(fs.list[i][0] != ".") {
+			view.fileList.appendChild(elt("p", {class: "file-list-item", onclick: "view.goto('" + fs.list[i] + "')"}, fs.list[i]));
+		}
 	}
 }
 
@@ -59,13 +62,14 @@ view.goto = function(path) {
 
 	var req = new XMLHttpRequest();
 	req.addEventListener("load", function(response) {
-		var dir = this.getResponseHeader("dir");
+		var dir = req.getResponseHeader("dir");
 		//this looks wrong but it isn't
 		if(dir == "true") {
 			fs.curdir = path;
+			fs.getList(view.listFiles);
 		}
 		else {
-			window.location.replace(path);
+			view.fileView.src = path;
 		}
 	});
 	req.open("GET", path);
