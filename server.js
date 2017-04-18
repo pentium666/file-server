@@ -83,8 +83,9 @@ http.createServer(function(request, response) {
 
 function urlToPath(url) {
 	var path = require("url").parse(url).pathname;
-	if(path == "/") {
-		path += "index.html";
+
+	if(path == "/" || path == "/&") {
+		path = "/index.html";
 	}
 	return "." + decodeURIComponent(path);
 }

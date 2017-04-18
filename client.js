@@ -18,8 +18,8 @@ function elt(name, attributes) {
 }
 
 function clear(node) {
-	while(node.hasChildNodes) {
-		node.removeChild(node.lastChild)
+	while(node.hasChildNodes()) {
+		node.removeChild(node.lastChild);
 	}
 }
 
@@ -44,12 +44,12 @@ view.fileList = document.getElementById("file-list");
 
 view.listFiles = function() {
 	clear(view.fileList);
-	for(i in fs.list) {
-		view.fileList.appendChild(elt("p", {class: "file-list-item", onclick: "goto(" + fs.list[i] + ")"}));
+	for(var i in fs.list) {
+		view.fileList.appendChild(elt("p", {class: "file-list-item", onclick: "view.goto('" + fs.list[i] + "')"}, fs.list[i]));
 	}
 }
 
-view.goto(path) {
+view.goto = function(path) {
 	if(path[0] == "/") {
 		path = "/public/" + path;
 	}
@@ -62,10 +62,13 @@ view.goto(path) {
 		var dir = this.getResponseHeader("dir");
 		//this looks wrong but it isn't
 		if(dir == "true") {
-
+			fs.curdir = path;
+		}
+		else {
+			window.location.replace(path);
 		}
 	});
-	req.open("GET", path]);
+	req.open("GET", path);
 	req.send();
 }
 
